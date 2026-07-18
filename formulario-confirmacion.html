@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Grabación del sable</title>
+<style>
+  :root {
+    --bg: #f6f5f2;
+    --surface: #ffffff;
+    --ink: #201d1a;
+    --ink-soft: #6b665f;
+    --line: #ded9d0;
+    --accent: #3d6b5c;
+    --accent-ink: #ffffff;
+    --accent-soft: #e4ede9;
+    --danger: #a3432f;
+    --focus: #3d6b5c;
+    --plate: #1c1c1e;
+    --plate-ink: #e9e5d8;
+    --plate-line: #45443c;
+    --radius: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17140f;
+      --surface: #221e18;
+      --ink: #efece5;
+      --ink-soft: #a29a8d;
+      --line: #3a352c;
+      --accent: #6fae98;
+      --accent-ink: #14231d;
+      --accent-soft: #24352d;
+      --danger: #d98468;
+      --focus: #6fae98;
+      --plate: #0e0e10;
+      --plate-ink: #e9e5d8;
+      --plate-line: #3a3934;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 6px;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+
+  .sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0 0 26px;
+    line-height: 1.5;
+  }
+
+  .steps {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 26px;
+  }
+
+  .steps span {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--line);
+    transition: background 0.25s ease;
+  }
+
+  .steps span.done { background: var(--accent); }
+
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  input[type="text"] {
+    font: inherit;
+    font-size: 15px;
+    padding: 11px 13px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  input[type="text"]:focus-visible {
+    border-color: var(--focus);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .error {
+    font-size: 12.5px;
+    color: var(--danger);
+    min-height: 16px;
+    margin-top: -2px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  button {
+    font: inherit;
+    font-weight: 600;
+    font-size: 14.5px;
+    border-radius: 9px;
+    padding: 11px 18px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: filter 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+    flex: 1;
+  }
+
+  .btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
+
+  .btn-secondary {
+    background: transparent;
+    border-color: var(--line);
+    color: var(--ink);
+  }
+
+  .btn-secondary:hover:not(:disabled) { background: var(--accent-soft); }
+
+  .confirm-note {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 18px 0 0;
+    line-height: 1.5;
+  }
+
+  .plate {
+    background: var(--plate);
+    color: var(--plate-ink);
+    border: 1px solid var(--plate-line);
+    border-radius: 8px;
+    padding: 22px 18px;
+    text-align: center;
+  }
+
+  .plate .lead {
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 12.5px;
+    color: #b7b2a3;
+    margin: 0 0 14px;
+  }
+
+  .plate .line {
+    font-family: Arial, "Helvetica Neue", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    line-height: 1.9;
+    word-break: break-word;
+  }
+
+  .plate .line.names {
+    font-size: 17px;
+  }
+
+  .error-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: color-mix(in srgb, var(--danger) 12%, transparent);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    border-radius: 9px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 18px;
+  }
+
+  .success {
+    text-align: center;
+    padding: 12px 0 4px;
+  }
+
+  .success .icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .success svg { width: 22px; height: 22px; }
+  .success svg path { stroke: var(--accent); }
+
+  .success h1 { text-align: center; }
+  .success .sub { text-align: center; margin-bottom: 22px; }
+
+  .hidden { display: none; }
+
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, var(--accent-ink) 35%, transparent);
+    border-top-color: var(--accent-ink);
+    display: inline-block;
+    vertical-align: -2px;
+    margin-right: 7px;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .steps span { transition: none; }
+    .spinner { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Paso 1: datos -->
+  <section id="step-form">
+    <p class="eyebrow">Paso 1 de 2</p>
+    <h1>Datos del cadete</h1>
+    <p class="sub">Completá los dos campos. En el siguiente paso vas a poder revisar la grabación antes de confirmarla.</p>
+
+    <div class="steps"><span class="done"></span><span></span></div>
+
+    <form id="dataForm" novalidate>
+      <fieldset>
+        <div class="field">
+          <label for="campo1">Nombres del cadete</label>
+          <input type="text" id="campo1" name="campo1" autocomplete="off" />
+          <div class="error" id="error1"></div>
+        </div>
+        <div class="field">
+          <label for="campo2">Apellidos del cadete</label>
+          <input type="text" id="campo2" name="campo2" autocomplete="off" />
+          <div class="error" id="error2"></div>
+        </div>
+      </fieldset>
+      <div class="actions">
+        <button type="submit" class="btn-primary">Revisar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Paso 2: revisión y confirmación -->
+  <section id="step-review" class="hidden">
+    <p class="eyebrow">Paso 2 de 2</p>
+    <h1>Confirmá la grabación</h1>
+    <p class="sub">Revisá que el texto sea correcto antes de enviarlo. Podés volver atrás para corregir cualquier dato.</p>
+
+    <div class="steps"><span class="done"></span><span class="done"></span></div>
+
+    <div class="plate">
+      <p class="lead">La grabación del sable será la siguiente:</p>
+      <div class="line">L.M.G.E.</div>
+      <div class="line names" id="reviewNames"></div>
+      <div class="line">PROMOCION LXXVII</div>
+    </div>
+
+    <div id="reviewError" class="error-banner hidden"></div>
+
+    <p class="confirm-note">Al confirmar, estos datos se envían y se guardan en la planilla. No se podrán editar desde aquí.</p>
+
+    <div class="actions">
+      <button type="button" class="btn-secondary" id="btnBack">Volver</button>
+      <button type="button" class="btn-primary" id="btnConfirm">Confirmar y enviar</button>
+    </div>
+  </section>
+
+  <!-- Paso 3: éxito -->
+  <section id="step-success" class="hidden">
+    <div class="success">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 13l4 4L19 7" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1>Grabación registrada</h1>
+      <p class="sub">Los datos se guardaron correctamente en la planilla.</p>
+      <div class="actions">
+        <button type="button" class="btn-secondary" id="btnReset" style="flex:1">Cargar otro cadete</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoaNb7yhJ8WLrT-2QIzYA6N3oxI54DanwKYXh0pGWYg53akL949CSVmc2f2jRGsm3u/exec';
+  const PROMOCION = 'LXXVII';
+
+  const stepForm = document.getElementById('step-form');
+  const stepReview = document.getElementById('step-review');
+  const stepSuccess = document.getElementById('step-success');
+  const dataForm = document.getElementById('dataForm');
+  const campo1 = document.getElementById('campo1');
+  const campo2 = document.getElementById('campo2');
+  const error1 = document.getElementById('error1');
+  const error2 = document.getElementById('error2');
+  const reviewNames = document.getElementById('reviewNames');
+  const reviewError = document.getElementById('reviewError');
+  const btnConfirm = document.getElementById('btnConfirm');
+  const btnBack = document.getElementById('btnBack');
+
+  let nombres = '';
+  let apellidos = '';
+
+  function show(section) {
+    [stepForm, stepReview, stepSuccess].forEach(s => s.classList.add('hidden'));
+    section.classList.remove('hidden');
+  }
+
+  dataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let valid = true;
+    error1.textContent = '';
+    error2.textContent = '';
+
+    if (!campo1.value.trim()) {
+      error1.textContent = 'Este campo es obligatorio.';
+      valid = false;
+    }
+    if (!campo2.value.trim()) {
+      error2.textContent = 'Este campo es obligatorio.';
+      valid = false;
+    }
+    if (!valid) return;
+
+    nombres = campo1.value.trim().toUpperCase();
+    apellidos = campo2.value.trim().toUpperCase();
+    reviewNames.textContent = nombres + ' ' + apellidos;
+    reviewError.classList.add('hidden');
+    show(stepReview);
+  });
+
+  btnBack.addEventListener('click', () => {
+    show(stepForm);
+  });
+
+  btnConfirm.addEventListener('click', async () => {
+    btnConfirm.disabled = true;
+    btnBack.disabled = true;
+    reviewError.classList.add('hidden');
+    btnConfirm.innerHTML = '<span class="spinner"></span>Enviando…';
+
+    try {
+      const nombreCompleto = nombres + ' ' + apellidos;
+      // mode 'no-cors': Google Apps Script no siempre resuelve CORS, así que
+      // no podemos leer la respuesta. Si la solicitud de red no lanza error,
+      // asumimos que se envió correctamente.
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ nombreCompleto, promocion: PROMOCION }),
+        mode: 'no-cors'
+      });
+      show(stepSuccess);
+    } catch (err) {
+      reviewError.textContent = 'No se pudo enviar la grabación. Revisá tu conexión e intentá nuevamente.';
+      reviewError.classList.remove('hidden');
+    } finally {
+      btnConfirm.disabled = false;
+      btnBack.disabled = false;
+      btnConfirm.textContent = 'Confirmar y enviar';
+    }
+  });
+
+  document.getElementById('btnReset').addEventListener('click', () => {
+    dataForm.reset();
+    nombres = '';
+    apellidos = '';
+    show(stepForm);
+    campo1.focus();
+  });
+</script>
+</body>
+</html>
