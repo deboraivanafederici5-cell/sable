@@ -349,9 +349,6 @@
       </div>
       <h1>Grabación registrada</h1>
       <p class="sub">Los datos se guardaron correctamente en la planilla.</p>
-      <div class="actions">
-        <button type="button" class="btn-secondary" id="btnReset" style="flex:1">Cargar otro cadete</button>
-      </div>
     </div>
   </section>
 
@@ -434,14 +431,6 @@
       btnBack.disabled = false;
       btnConfirm.textContent = 'Confirmar y enviar';
     }
-  });
-
-  document.getElementById('btnReset').addEventListener('click', () => {
-    dataForm.reset();
-    nombres = '';
-    apellidos = '';
-    show(stepForm);
-    campo1.focus();
   });
 </script>
 </body>
